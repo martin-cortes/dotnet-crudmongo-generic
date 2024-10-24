@@ -1,4 +1,5 @@
-﻿using Application.Common.Helpers.Exceptions;
+﻿using Application.Common.Extensions.Logger;
+using Application.Common.Helpers.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PeopleRegistration.Service.Controllers.Base
@@ -6,11 +7,11 @@ namespace PeopleRegistration.Service.Controllers.Base
     [ApiController]
     public class BaseController : ControllerBase
     {
-        protected IActionResult HandleResponse<T>(Func<T> func, string successMessage = null)
+        protected async Task<IActionResult> HandleResponse<T>(Func<Task<T>> func, string successMessage = null)
         {
             try
             {
-                T data = func();
+                T data = await func();
 
                 return CreateResponse(data, successMessage);
             }
@@ -20,11 +21,14 @@ namespace PeopleRegistration.Service.Controllers.Base
             }
             catch (Exception ex)
             {
+                LoggerExtension.LogError(ex, ex.Message, nameof(BaseController));
+
                 return HandleException(ex);
             }
         }
 
         #region Private Method
+
         private ObjectResult CreateResponse<T>(T data, string successMessage)
         {
             int statusCode = StatusCodes.Status200OK;
