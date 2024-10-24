@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace Application.Common.Health
 {
@@ -35,6 +36,8 @@ namespace Application.Common.Health
 
             HealthCheckInformation information;
 
+            JsonSerializerOptions options = new() { WriteIndented = true };
+
             foreach (KeyValuePair<string, HealthReportEntry> entry in report.Entries)
             {
                 string description = entry.Value.Status != HealthStatus.Unhealthy ?
@@ -52,9 +55,8 @@ namespace Application.Common.Health
                                        "{Information} \n" +
                                        "============= END HEALTHCHECK {ServiceEnd} ===========",
                                        entry.Key,
-                                       SerializerObject.ConvertObjectToJsonIndented(information),
-                                       entry.Key
-                );
+                                       JsonSerializer.Serialize(information, options),
+                                       entry.Key);
             }
         }
 
