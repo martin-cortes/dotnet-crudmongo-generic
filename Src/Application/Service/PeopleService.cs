@@ -24,5 +24,13 @@ namespace Application.Service
 
             return await _peopleRepository.InsertDocumentAsync(people);
         }
+
+        public async Task<People> GetByIdAsync(string id)
+        {
+            _logger.LogInformation("Method: {Method} -- Get people by id: {Id}",
+                nameof(CreatePeopleAsync), id);
+
+            return await _peopleRepository.GetByIdAsync(id);    
+        }
     }
 }

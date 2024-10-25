@@ -12,10 +12,25 @@ namespace PeopleRegistration.Service.Controllers
         private readonly ILogger<ControllerPeople> _logger;
         private readonly IPeopleService _peopleService;
 
-        public ControllerPeople(ILogger<ControllerPeople> logger, IPeopleService peopleService)
+        public ControllerPeople(ILogger<ControllerPeople> logger, IPeopleService peopleService) : base(logger)
         {
             _logger = logger;
             _peopleService = peopleService;
+        }
+
+
+        [HttpGet]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> GetById(string id)
+        {
+            _logger.LogInformation("Get by id -- Id: {Id}", id);
+
+            return await HandleResponse(async () =>
+            {
+                return await _peopleService.GetByIdAsync(id);
+            });
         }
 
         [HttpPost]
@@ -31,5 +46,7 @@ namespace PeopleRegistration.Service.Controllers
                 return await _peopleService.CreatePeopleAsync(people);
             });
         }
+
+
     }
 }

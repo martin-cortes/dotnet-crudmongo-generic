@@ -1,5 +1,5 @@
-﻿using Application.Common.Extensions.Logger;
-using Application.Common.Helpers.Exceptions;
+﻿using Application.Common.Helpers.Exceptions;
+using Application.Common.Helpers.Serializer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace PeopleRegistration.Service.Controllers.Base
@@ -7,6 +7,13 @@ namespace PeopleRegistration.Service.Controllers.Base
     [ApiController]
     public class BaseController : ControllerBase
     {
+        private readonly ILogger<BaseController> _logger;
+
+        public BaseController(ILogger<BaseController> logger)
+        {
+            _logger = logger;
+        }
+
         protected async Task<IActionResult> HandleResponse<T>(Func<Task<T>> func, string successMessage = null)
         {
             try
@@ -21,7 +28,7 @@ namespace PeopleRegistration.Service.Controllers.Base
             }
             catch (Exception ex)
             {
-                LoggerExtension.LogError(ex, ex.Message, nameof(BaseController));
+                _logger.LogError(ex, "Error message: {Message}", ex.Message);
 
                 return HandleException(ex);
             }
@@ -44,6 +51,8 @@ namespace PeopleRegistration.Service.Controllers.Base
                     Data = data
                 });
             }
+
+            _logger.LogInformation("Data: {Data}", SerializerObject.ConvertObjectToJsonIndented(data));
 
             return StatusCode(statusCode, new ApiResponse<T>
             {

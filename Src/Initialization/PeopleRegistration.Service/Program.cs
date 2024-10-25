@@ -1,9 +1,10 @@
-using Application.Common.Extensions.Middlewares;
 using Application.Common.Helpers.Serializer;
 using Application.Common.Utilities;
 using Infrastructure;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 using PeopleRegistration.Service.Configuration;
+using PeopleRegistration.Service.HeadersConfiguration;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ BusinessSettings settings = builder.Configuration
     .GetSection(nameof(BusinessSettings))
     .Get<BusinessSettings>();
 
+Console.WriteLine($"Mongo Provider Configuration: \n{SerializerObject.ConvertObjectToJsonIndented(settings)}");
+
 builder.Host
     .ConfigureSerilog(settings.LogLevelSink,
                       configuration["AppSettings:DatabaseName"],
@@ -58,7 +61,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Crud Mongo Generyc", Version = "v1" });
+    c.OperationFilter<AddRequiredHeadersOperationFilter>();
+});
 
 string[] mongoHealthCheck = ["MongoDB", "Mongo"];
 
@@ -91,6 +98,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseMiddleware<CustomHeadersMiddleware>();
+
+app.UseRouting();
 
 app.MapControllers();
 
