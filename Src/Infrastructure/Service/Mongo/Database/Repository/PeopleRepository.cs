@@ -2,6 +2,7 @@
 using AutoMapper;
 using Infrastructure.Service.Mongo.Database.Context;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 
 namespace Infrastructure.Service.Mongo.Database.Repository
@@ -9,12 +10,10 @@ namespace Infrastructure.Service.Mongo.Database.Repository
     public class PeopleRepository<TEntity> : IPeopleRepository<TEntity> where TEntity : class
     {
         private readonly IMongoCollection<BsonDocument> _collection;
-        private readonly IMapper _mapper;
 
         public PeopleRepository(MongoContext context, IMapper mapper)
         {
             _collection = context.GetCollection();
-            _mapper = mapper;
         }
 
         public async Task<string> InsertDocumentAsync(TEntity entity)
@@ -34,14 +33,16 @@ namespace Infrastructure.Service.Mongo.Database.Repository
 
             BsonDocument document = await _collection.Find(filter).FirstOrDefaultAsync();
 
-            return _mapper.Map<TEntity>(document);
+            document.Remove("_id");
+
+            return BsonSerializer.Deserialize<TEntity>(document);
         }
 
         public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
             IEnumerable<BsonDocument> bsonElements = await _collection.Find(new BsonDocument()).ToListAsync();
 
-            return _mapper.Map<IEnumerable<TEntity>>(bsonElements);
+            return BsonSerializer.Deserialize<IEnumerable<TEntity>>((BsonDocument)bsonElements);
         }
 
         public async Task<bool> UpdateAsync(string id, TEntity entity)
