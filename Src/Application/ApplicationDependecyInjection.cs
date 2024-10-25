@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Application.Interfaces.Application;
+using Application.Service;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Application
 {
@@ -6,6 +8,8 @@ namespace Application
     {
         public static IServiceCollection Application(this IServiceCollection services)
         {
+            services.AddScoped<IPeopleService, PeopleService>();
+
             return services;
         }
     }

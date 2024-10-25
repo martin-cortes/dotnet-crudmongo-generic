@@ -25,16 +25,6 @@ namespace Infrastructure.Service.Mongo.ProviderService
                 _ = WatchCollectionStatic();
         }
 
-        private async Task WatchCollectionStatic()
-        {
-            using IChangeStreamCursor<ChangeStreamDocument<BusinessParameter>> cursor = await _collection.WatchAsync();
-            await cursor.ForEachAsync((change) =>
-            {
-                Load();
-                OnReload();
-            });
-        }
-
         public override void Load()
         {
             List<BusinessParameter> configs = _collection.Find(FilterDefinition<BusinessParameter>.Empty).ToList();
@@ -59,6 +49,16 @@ namespace Infrastructure.Service.Mongo.ProviderService
                     Set($"{_configurationName}:" + clave, obtenerValor);
                 }
             }
+        }
+
+        private async Task WatchCollectionStatic()
+        {
+            using IChangeStreamCursor<ChangeStreamDocument<BusinessParameter>> cursor = await _collection.WatchAsync();
+            await cursor.ForEachAsync((change) =>
+            {
+                Load();
+                OnReload();
+            });
         }
 
         private static bool IsPrimitiveType(Type type)
