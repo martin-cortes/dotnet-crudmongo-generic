@@ -23,7 +23,7 @@ namespace PeopleRegistration.Service.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> GetById(string id)
+        public async Task<IActionResult> GetPeopleById(string id)
         {
             _logger.LogInformation("Get by id -- Id: {Id}", id);
 
@@ -47,6 +47,18 @@ namespace PeopleRegistration.Service.Controllers
             });
         }
 
+        [HttpPut]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> UpdatePeople(string id, People people)
+        {
+            _logger.LogInformation("Update people");
 
+            return await HandleResponse(async () =>
+            {
+                return await _peopleService.UpdateAsync(id, people);
+            });
+        }
     }
 }

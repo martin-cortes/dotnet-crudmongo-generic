@@ -2,9 +2,11 @@
 {
     public class BusinessSettings
     {
-        public string HealthChecksEndPoint { get; set; }
+        public string UrlCors { get; set; }
+        public string PolicyName { get; set; }
         public string LogLevelSink { get; set; }
-        public string SinkCollectionName { get; set; }
         public int DocumentExpiration { get; set; }
+        public string SinkCollectionName { get; set; }
+        public string HealthChecksEndPoint { get; set; }
     }
 }

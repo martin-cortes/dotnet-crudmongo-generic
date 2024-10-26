@@ -32,5 +32,19 @@ namespace Application.Service
 
             return await _peopleRepository.GetByIdAsync(id);    
         }
+
+        public async Task<People> UpdateAsync(string id, People people)
+        {
+            _logger.LogInformation("Updating people with the next id: {Id}  \nData: {Data}",
+                id, SerializerObject.ConvertObjectToJsonIndented(people));
+
+            bool responseUpdate = await _peopleRepository.UpdateAsync(id, people);
+
+            _logger.LogInformation("Update status: {Status}", responseUpdate);
+
+            People response = responseUpdate ? await _peopleRepository.GetByIdAsync(id) : null;
+
+            return response;
+        }
     }
 }
