@@ -60,5 +60,19 @@ namespace PeopleRegistration.Service.Controllers
                 return await _peopleService.UpdateAsync(id, people);
             });
         }
+
+        [HttpDelete]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> DeletePeople(string id)
+        {
+            _logger.LogInformation("Deleting person");
+
+            return await HandleResponse(async () =>
+            {
+                return await _peopleService.DeleteAsync(id);
+            });
+        }
     }
 }

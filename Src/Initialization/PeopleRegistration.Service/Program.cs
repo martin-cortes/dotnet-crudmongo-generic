@@ -50,7 +50,6 @@ builder.Host
 
 builder.Services
     .RegisterService()
-    .RegisterAutoMapper()
     .RegisterHealthCheck()
     .RegisterCors(settings.PolicyName, settings.UrlCors)
     .RegisterMongo(connectionString,
