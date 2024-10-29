@@ -7,5 +7,9 @@ namespace Application.Interfaces.Application
         Task<string> CreatePeopleAsync(People people);
 
         Task<People> GetByIdAsync(string id);
+
+        Task<People> UpdateAsync(string id, People people);
+
+        Task<string> DeleteAsync(string id);
     }
 }
