@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces.Infrastructure;
-using AutoMapper;
 using Infrastructure.Service.Mongo.Database.Context;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -11,7 +10,7 @@ namespace Infrastructure.Service.Mongo.Database.Repository
     {
         private readonly IMongoCollection<BsonDocument> _collection;
 
-        public PeopleRepository(MongoContext context, IMapper mapper)
+        public PeopleRepository(MongoContext context)
         {
             _collection = context.GetCollection();
         }

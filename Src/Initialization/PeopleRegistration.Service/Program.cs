@@ -50,8 +50,8 @@ builder.Host
 
 builder.Services
     .RegisterService()
-    .RegisterAutoMapper()
     .RegisterHealthCheck()
+    .RegisterCors(settings.PolicyName, settings.UrlCors)
     .RegisterMongo(connectionString,
                    configuration["AppSettings:DatabaseName"],
                    configuration["AppSettings:CollectionName"]
@@ -90,6 +90,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(settings.PolicyName);
 
 app.UseHealthChecks(settings.HealthChecksEndPoint);
 

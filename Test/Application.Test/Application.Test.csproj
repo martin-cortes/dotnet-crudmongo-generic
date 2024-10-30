@@ -26,4 +26,10 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Src\Application\Application.csproj" />
+    <ProjectReference Include="..\..\Src\Core\Core.csproj" />
+    <ProjectReference Include="..\Core.Test\Core.Test.csproj" />
+  </ItemGroup>
+
 </Project>
