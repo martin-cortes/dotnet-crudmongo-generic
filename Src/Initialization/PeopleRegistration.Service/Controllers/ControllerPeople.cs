@@ -18,7 +18,6 @@ namespace PeopleRegistration.Service.Controllers
             _peopleService = peopleService;
         }
 
-
         [HttpGet]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
